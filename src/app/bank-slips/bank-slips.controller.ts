@@ -22,15 +22,6 @@ export class BankSlipsController {
   })
   @ApiBadRequestResponse({
     description: 'Response when barcode received is invalid',
-    // schema: {
-    //   type: typeof String,
-    //   enum: [
-    //     EMessages.NON_NUMERIC_VALUE,
-    //     EMessages.LINE_LONGER_THAN_EXPECTED,
-    //     EMessages.LINE_SHORTER_THAN_EXPECTED,
-    //   ],
-    // },
-    // content: { 'application/json': { example: EMessages } },
     type: NumericLineErrorResponseDto,
   })
   getBankSlipInfo(
