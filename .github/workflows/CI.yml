@@ -46,6 +46,7 @@ jobs:
       - run: yarn run test:e2e
 
   deploy:
+    needs: [e2e-test]
     name: Deploy to Heroku
     runs-on: ubuntu-latest
     steps:
