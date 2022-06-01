@@ -1,9 +1,12 @@
-import { ClassSerializerInterceptor, Get, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, ClassSerializerInterceptor, Get, Type, UseInterceptors } from '@nestjs/common';
 import { Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BankSlipsService } from './bank-slips.service';
 import { BankSlipsDto } from './dto/bank-slip.dto';
+import { EMessages } from './validators/errorMessages.enum';
+import { NumericLineErrorResponseDto } from './validators/numeric-line.errors.dto';
+import { NumericLineValidator } from './validators/numeric-line.validator';
 
 @Controller('boleto')
 @ApiTags('Bank Slips')
@@ -18,9 +21,22 @@ export class BankSlipsController {
     description: 'Returns the information associated with the barcode',
   })
   @ApiBadRequestResponse({
-    description: 'Invalid bar code',
+    description: 'Response when barcode received is invalid',
+    // schema: {
+    //   type: typeof String,
+    //   enum: [
+    //     EMessages.NON_NUMERIC_VALUE,
+    //     EMessages.LINE_LONGER_THAN_EXPECTED,
+    //     EMessages.LINE_SHORTER_THAN_EXPECTED,
+    //   ],
+    // },
+    // content: { 'application/json': { example: EMessages } },
+    type: NumericLineErrorResponseDto,
   })
-  getBankSlipInfo(@Param('barCode') barCode: string): BankSlipsDto {
+  getBankSlipInfo(
+    @Param('barCode', NumericLineValidator)
+    barCode: string,
+  ): BankSlipsDto {
     return new BankSlipsDto({ amount: 1, barCode, expirationDate: new Date() });
   }
 }
