@@ -10,9 +10,7 @@ on:
 
 jobs:
   unit-test:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [14.x, 16.x]
@@ -30,8 +28,8 @@ jobs:
   e2e-test:
       runs-on: ubuntu-latest
       strategy:
-      matrix:
-        node-version: [14.x, 16.x]
+        matrix:
+          node-version: [14.x, 16.x]
       needs: [unit-test]
       steps:
       - uses: actions/checkout@v3
@@ -40,6 +38,6 @@ jobs:
         with:
             node-version: ${{ matrix.node-version }}
             cache: 'yarn'
-    - run: yarn install --frozen-lockfile # optional, --immutable
-    - run: yarn run test:e2e
+      - run: yarn install --frozen-lockfile
+      - run: yarn run test:e2e
 
