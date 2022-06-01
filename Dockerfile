@@ -1,4 +1,4 @@
-FROM node:15.10.0-alpine3.11
+FROM node:lts-alpine
 #Build
 WORKDIR /code
 
