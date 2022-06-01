@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  nodeserver:
+    environment:
+      NODE_ENV: production
+    build: ./
+    container_name: ewally-api
+    volumes:
+      - .:/code
+    networks:
+      - app-network
+
+  reverseproxy:
+    depends_on:
+      - nodeserver
+    image: nginx:latest
+    restart: always
+    container_name: ewally-lb
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8080:80" 
+    networks:
+      - app-network
+
+networks: 
+  app-network:
+    driver: bridge
