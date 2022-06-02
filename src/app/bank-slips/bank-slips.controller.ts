@@ -1,10 +1,11 @@
-import { BadRequestException, ClassSerializerInterceptor, Get, Type, UseInterceptors } from '@nestjs/common';
+import { ClassSerializerInterceptor, Get, Type, UseInterceptors } from '@nestjs/common';
 import { Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BankSlipsService } from './bank-slips.service';
 import { BankSlipsDto } from './dto/bank-slip.dto';
-import { EMessages } from './validators/errorMessages.enum';
+import { BillCheckDigitValidator } from './validators/bill-check-digit.validator';
+import { BankSlipCheckDigitValidator } from './validators/bank-slip-check-digit.validator';
 import { NumericLineErrorResponseDto } from './validators/numeric-line.errors.dto';
 import { NumericLineValidator } from './validators/numeric-line.validator';
 
@@ -25,9 +26,9 @@ export class BankSlipsController {
     type: NumericLineErrorResponseDto,
   })
   getBankSlipInfo(
-    @Param('barCode', NumericLineValidator)
+    @Param('barCode', NumericLineValidator, BankSlipCheckDigitValidator, BillCheckDigitValidator)
     barCode: string,
   ): BankSlipsDto {
-    return new BankSlipsDto({ amount: 1, barCode, expirationDate: new Date() });
+    return this.bankSlipsService.retrieveInfoFromBarCode(barCode);
   }
 }

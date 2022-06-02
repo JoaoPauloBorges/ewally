@@ -21,7 +21,7 @@ describe('NumericLineValidator', () => {
   describe('Given an value intercepted', () => {
     describe('when the value received is a numeric value', () => {
       const value = '21299758700000020000001121100012100447561740';
-      it('should throw return the same value', () => {
+      it('should return the same value received', () => {
         expect(validator.transform(value, {} as any)).toBe<string>(value);
       });
     });

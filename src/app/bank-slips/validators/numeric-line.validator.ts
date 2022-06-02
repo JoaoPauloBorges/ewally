@@ -4,7 +4,6 @@ import { EMessages } from './errorMessages.enum';
 @Injectable()
 export class NumericLineValidator implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
-    // console.log(`Validating BARCODE: ${value}`);
     const hasNonNumericValue = (value as string).search(/[^0-9]/) !== -1;
     if (!!hasNonNumericValue) {
       throw new BadRequestException(EMessages.NON_NUMERIC_VALUE);
