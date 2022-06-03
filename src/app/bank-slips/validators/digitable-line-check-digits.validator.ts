@@ -10,12 +10,14 @@ export class DigitableLineCheckDigitsValidator implements PipeTransform {
     const field3 = digitableLine.slice(24, 36);
     const field4 = digitableLine.slice(36, 48);
 
+    const currencyFlag = digitableLine[2];
+
     const fields = [field1, field2, field3, field4];
 
     fields.forEach((field) => {
       const checkDigit = field.slice(-1);
       const fieldArr = [...field.slice(0, -1)];
-      Utils.validateCheckDigitMod11(fieldArr, checkDigit, true);
+      Utils.validateCheckDigitWithMod11OrMod10ConditionallyByCurrencyFlag(fieldArr, checkDigit, currencyFlag);
     });
   }
 

@@ -4,7 +4,7 @@ export class Bills {
   }
   product: string;
   segment: string;
-  flagEffectiveValueOrReference: string;
+  currencyFlag: string;
   checkDigit: string;
   value: string;
   company: string;

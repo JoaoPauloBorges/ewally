@@ -15,12 +15,10 @@ export class BillRetrieverService extends InfoRetriver {
 
     const barCode = field1 + field2 + field3 + field4;
 
-    this.validateBarCodeCheckDigit(barCode);
-
     const bill = new Bills({
       product: barCode[0],
       segment: barCode[1],
-      flagEffectiveValueOrReference: barCode[2],
+      currencyFlag: barCode[2],
       checkDigit: barCode[3],
       value: barCode.slice(4, 15),
       company: barCode.slice(15, 19),
@@ -28,16 +26,22 @@ export class BillRetrieverService extends InfoRetriver {
       freeField: barCode.slice(22),
     });
 
+    this.validateBarCodeCheckDigit(barCode, bill.currencyFlag);
+
     return new GetInfoFromDigitableLineDto({
       amount: bill.getValue(),
       barCode,
     });
   }
 
-  validateBarCodeCheckDigit(barCode: string) {
+  validateBarCodeCheckDigit(barCode: string, flag?: string) {
     const barCodeWithoutCheckDigit = [...barCode.slice(0, 3), ...barCode.slice(4)];
     try {
-      Utils.validateCheckDigitMod11(barCodeWithoutCheckDigit, barCode[3], true);
+      Utils.validateCheckDigitWithMod11OrMod10ConditionallyByCurrencyFlag(
+        barCodeWithoutCheckDigit,
+        barCode[3],
+        flag,
+      );
     } catch (e) {
       if (e instanceof BadRequestException) {
         throw new BadRequestException(EMessages.BARCODE_CHECKDIGIT_ERROR);

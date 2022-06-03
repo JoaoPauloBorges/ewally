@@ -30,6 +30,18 @@ export class Utils {
     }
   }
 
+  static validateCheckDigitWithMod11OrMod10ConditionallyByCurrencyFlag(
+    value: string[],
+    checkDigit: string,
+    flagCurrency: string,
+  ) {
+    if (flagCurrency === '8' || flagCurrency === '9') {
+      Utils.validateCheckDigitMod11(value, checkDigit, true);
+    } else {
+      Utils.validateCheckDigitMod10(value, checkDigit);
+    }
+  }
+
   static validateCheckDigitMod11(value: string[], cdReceived: string, isBillMod11Rule = false) {
     const getMultiplier = genGetMultiplier(value.length);
     try {

@@ -1,3 +1,4 @@
+import { Utils } from '@app/shared/utils.service';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DigitableLineCheckDigitsValidator } from './digitable-line-check-digits.validator';
@@ -19,7 +20,7 @@ describe('DigitableLineCheckDigitsValidator', () => {
   });
 
   describe('Given an value intercepted', () => {
-    describe('when the digitableline is from a bank-slip type', () => {
+    describe('when the digitableline is correct and it is from a bank-slip type', () => {
       const digitableline = '21290001192110001210904475617405975870000002000';
       it('should call validateBankSlipDigitableLine and do not throw any error', () => {
         const spy = jest.spyOn(validator, 'validateBankSlipDigitableLine');
@@ -32,14 +33,31 @@ describe('DigitableLineCheckDigitsValidator', () => {
       });
     });
 
-    describe('when the digitableline is from a bill type', () => {
-      const digitableline = '858200000260178601801205529544183860673925100017';
-      it('should call validateBillDigitableLine and do not throw any error', () => {
+    describe('when the digitableline is correct, it is from a bill type and it has a currency flag 8 or 9', () => {
+      const digitablelineCurrencyFlag8 = '858200000260178601801205529544183860673925100017';
+      it('should call validateBillDigitableLine, validate checkdigit with MOD11 and do not throw any error', () => {
         const spy = jest.spyOn(validator, 'validateBillDigitableLine');
+        const spyUtils = jest.spyOn(Utils, 'validateCheckDigitMod11');
 
-        validator.transform(digitableline, {} as any);
+        validator.transform(digitablelineCurrencyFlag8, {} as any);
         expect(spy).toBeCalled();
-        expect(() => validator.transform(digitableline, {} as any)).not.toThrow(
+        expect(spyUtils).toBeCalled();
+        expect(() => validator.transform(digitablelineCurrencyFlag8, {} as any)).not.toThrow(
+          new BadRequestException(EMessages.DIGITABLELINE_CHECKDIGIT_ERROR),
+        );
+      });
+    });
+
+    describe('when the digitableline is correct, it is from a bill type and it has a currency flag 6 or 7', () => {
+      const digitablelineCurrencyFlag6 = '836900000032808800090462626720052200000108309113';
+      it('should call validateBillDigitableLine, validate checkdigit with MOD10 and do not throw any error', () => {
+        const spy = jest.spyOn(validator, 'validateBillDigitableLine');
+        const spyUtils = jest.spyOn(Utils, 'validateCheckDigitMod10');
+
+        validator.transform(digitablelineCurrencyFlag6, {} as any);
+        expect(spy).toBeCalled();
+        expect(spyUtils).toBeCalled();
+        expect(() => validator.transform(digitablelineCurrencyFlag6, {} as any)).not.toThrow(
           new BadRequestException(EMessages.DIGITABLELINE_CHECKDIGIT_ERROR),
         );
       });
