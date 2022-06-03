@@ -22,7 +22,8 @@ export class Utils {
     }, '');
 
     const sum = [...stringOfProducts].reduce((acc, curr) => acc + Number(curr), 0);
-    const checkDigit = 10 - (sum % 10);
+    let checkDigit = 10 - (sum % 10);
+    checkDigit = checkDigit === 10 ? 0 : checkDigit;
 
     if (checkDigit !== Number(cdReceived)) {
       throw new BadRequestException(EMessages.DIGITABLELINE_CHECKDIGIT_ERROR);
