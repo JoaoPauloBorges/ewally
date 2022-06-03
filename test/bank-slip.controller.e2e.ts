@@ -46,5 +46,21 @@ describe('BankSlipsController (e2e)', () => {
           } as GetInfoFromDigitableLineDto);
       });
     });
+
+    describe('When the digitable code has an invalid checkDigit and it is from a bill type', () => {
+      const digitableline = '858300000260178601801205529544183860673925100017';
+
+      it('should respond with 400', () => {
+        return request(app.getHttpServer()).get(`/boleto/${digitableline}`).expect(400);
+      });
+    });
+
+    describe('When the digitable code has an invalid checkDigit and it is from a bank-slip type', () => {
+      const digitableline = '21290001192110001210904475617406975870000002000';
+
+      it('should respond with 400', () => {
+        return request(app.getHttpServer()).get(`/boleto/${digitableline}`).expect(400);
+      });
+    });
   });
 });
