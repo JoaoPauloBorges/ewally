@@ -10,11 +10,14 @@ export class NumericLineValidator implements PipeTransform {
     }
 
     const length = [...value].length;
-    if (length !== 44) {
-      if (length > 44) {
+    if (length !== 47 && length !== 48) {
+      if (length > 48) {
         throw new BadRequestException(EMessages.LINE_LONGER_THAN_EXPECTED);
       }
-      throw new BadRequestException(EMessages.LINE_SHORTER_THAN_EXPECTED);
+
+      if (length < 47) {
+        throw new BadRequestException(EMessages.LINE_SHORTER_THAN_EXPECTED);
+      }
     }
     return value;
   }

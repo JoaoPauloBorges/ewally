@@ -3,22 +3,21 @@ import { Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BankSlipsService } from './bank-slips.service';
-import { BankSlipsDto } from './dto/bank-slip.dto';
-import { BillCheckDigitValidator } from './validators/bill-check-digit.validator';
-import { BankSlipCheckDigitValidator } from './validators/bank-slip-check-digit.validator';
+import { GetInfoFromDigitableLineDto } from './dto/get-info-from-digitable-line.dto';
 import { NumericLineErrorResponseDto } from './validators/numeric-line.errors.dto';
 import { NumericLineValidator } from './validators/numeric-line.validator';
+import { DigitableLineCheckDigitsValidator } from './validators/digitable-line-check-digits.validator';
 
 @Controller('boleto')
 @ApiTags('Bank Slips')
 export class BankSlipsController {
-  constructor(private readonly bankSlipsService: BankSlipsService) {}
+  constructor(private readonly service: BankSlipsService) {}
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':barCode')
   @ApiOkResponse({
     status: 200,
-    type: BankSlipsDto,
+    type: GetInfoFromDigitableLineDto,
     description: 'Returns the information associated with the barcode',
   })
   @ApiBadRequestResponse({
@@ -26,9 +25,9 @@ export class BankSlipsController {
     type: NumericLineErrorResponseDto,
   })
   getBankSlipInfo(
-    @Param('barCode', NumericLineValidator, BankSlipCheckDigitValidator, BillCheckDigitValidator)
+    @Param('barCode', NumericLineValidator, DigitableLineCheckDigitsValidator)
     barCode: string,
-  ): BankSlipsDto {
-    return this.bankSlipsService.retrieveInfoFromBarCode(barCode);
+  ): GetInfoFromDigitableLineDto {
+    return this.service.retrieveInfo(barCode);
   }
 }

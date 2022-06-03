@@ -20,7 +20,7 @@ describe('NumericLineValidator', () => {
 
   describe('Given an value intercepted', () => {
     describe('when the value received is a numeric value', () => {
-      const value = '21299758700000020000001121100012100447561740';
+      const value = '21290001192110001210904475617405975870000002000';
       it('should return the same value received', () => {
         expect(validator.transform(value, {} as any)).toBe<string>(value);
       });
@@ -35,8 +35,8 @@ describe('NumericLineValidator', () => {
       });
     });
 
-    describe('when the length of barcode is shorter then 44 characters', () => {
-      const value = '212997587000000200000011211';
+    describe('when the length of barcode is shorter then 47 characters', () => {
+      const value = '212900011921100012';
       it('should throw an BadRequestException with the correct description', () => {
         expect(() => validator.transform(value, {} as any)).toThrowError(
           new BadRequestException(EMessages.LINE_SHORTER_THAN_EXPECTED),
@@ -44,8 +44,8 @@ describe('NumericLineValidator', () => {
       });
     });
 
-    describe('when the length of barcode is longer then 44 characters', () => {
-      const value = '212997587000000200000011211000121004475617401';
+    describe('when the length of barcode is longer then 48 characters', () => {
+      const value = '2129000119211000121090447561740597587000000200012333';
       it('should throw an BadRequestException with the correct description', () => {
         expect(() => validator.transform(value, {} as any)).toThrowError(
           new BadRequestException(EMessages.LINE_LONGER_THAN_EXPECTED),
