@@ -1,0 +1,21 @@
+FROM node:lts-alpine as build-container
+WORKDIR /code
+
+COPY ./package.json /code
+COPY ./yarn.lock /code
+RUN yarn install
+
+COPY . .
+
+RUN yarn build
+
+
+FROM node:lts-alpine as backend
+WORKDIR /code
+
+COPY --from=build-container code/dist .
+COPY --from=build-container code/package.json .
+
+EXPOSE 8080
+
+CMD ["yarn", "run", "start:prod"]
