@@ -38,11 +38,12 @@ describe('BankSlipsRetrieverService', () => {
         const validationMethodMock = jest.spyOn(service, 'validateBarCodeCheckDigit').mockImplementation();
 
         const result = service.retrieveInfoFromDigitableLine(digitableLine);
-        result.expirationDate.setHours(0, 0, 0, 0);
+        const expirationDate = new Date('July 16, 2018');
+
         expect(result).toEqual({
           amount: 20,
           barCode: '21299758700000020000001121100012100447561740',
-          expirationDate: new Date('2018-07-16T03:00:00.000Z'),
+          expirationDate,
         });
         expect(validationMethodMock).toBeCalled();
       });
